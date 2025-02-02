@@ -1,7 +1,7 @@
 pipeline {
     agent any 
     tools {
-        nodejs 'node-js20'
+        nodejs 'node-js20' 
     }
     stages {
         stage('stage01- clone the code') {
