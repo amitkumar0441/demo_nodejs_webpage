@@ -14,10 +14,21 @@ pipeline {
             sh 'npm install'   
             }
         }
-        stage('stage03- security check'){
+
+        stage('stage04- create the docker image'){
             steps{
-                dependencyCheck additionalArguments: '--scan ./ --format HTML ', odcInstallation: 'DP'
-                dependencyCheckPublisher pattern: '**/dependency-check-report.xml'
+                sh 'docker build -t amitkumar0441/adityajaiswalnodeproject:${BUILD_NUMBER} .'
+            }
+        }
+        stage('stage 05- push image to dockerhub') {
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'dockercredentials', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                    sh '''
+                        echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
+                        docker push amitkumar0441/adityajaiswalnodeproject:${BUILD_NUMBER}
+                        docker logout
+                    '''
+                }
             }
         }
     }
