@@ -31,5 +31,10 @@ pipeline {
                 }
             }
         }
+        stage('stage06- run the docker container'){
+            steps{
+                sh 'docker run -d --name meracontainer -p 8081:8081 amitkumar0441/adityajaiswalnodeproject:${BUILD_NUMBER}'
+            }
+        }
     }
 }
