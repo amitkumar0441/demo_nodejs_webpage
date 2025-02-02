@@ -14,5 +14,11 @@ pipeline {
             sh 'npm install'   
             }
         }
+        stage('stage03- security check'){
+            steps{
+                dependencyCheck additionalArguments: '--scan ./ --format HTML ', odcInstallation: 'DP'
+                dependencyCheckPublisher pattern: '**/dependency-check-report.xml'
+            }
+        }
     }
 }
