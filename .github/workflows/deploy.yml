@@ -1,0 +1,32 @@
+name: Node.js application deployment
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  Deploy:
+    runs-on: self-hosted
+
+    strategy:
+      matrix:
+        node-version: [20.x]
+        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+
+    steps:
+      - name: Clone the code
+        uses: actions/checkout@v4
+
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build the Docker image
+        run: docker build -t nodesimpleimage .
+
+      - name: Run the Docker container
+        run: docker run -d --name mynodesimplecontainer -p 8081:8081 nodesimpleimage
